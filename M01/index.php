@@ -1,9 +1,16 @@
 <?php
 include("connect.php");
 
+if (isset($_POST['btnPost'])) {
+  $newPost = $_POST['newPost'];
+  $date = $_POST['formattedDate'];
+
+  $insertQuery = "INSERT INTO `posts`(`userID`, `content`, `dateTime`, `privacy`, `isDeleted`, `cityID`, `provinceID`) VALUES ('1', '$newPost', '$date', 'Public', 'No', '1', '1')";
+  mysqli_query($conn, $insertQuery);
+}
+
 $query = "SELECT Userinfo.firstName, Users.userName, Posts.dateTime, Posts.content FROM Userinfo INNER JOIN Users ON Userinfo.userID = Users.userID INNER JOIN Posts ON Userinfo.userID = Posts.userID";
 $result = executeQuery($query);
-
 ?>
 
 <!doctype html>
@@ -12,19 +19,50 @@ $result = executeQuery($query);
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Activity 5 DA</title>
+  <title>Midterm DA</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="icon" type="image/png" href="favicon.png">
+  <style>
+    .expanding-textarea {
+      width: 100%;
+      resize: none;
+      overflow: hidden;
+      min-height: 40px;
+    }
+  </style>
 </head>
 
 <body>
-  <div class="container-fluid shadow mb-5 p-3" style="background-color: slategray;">
+  <div class="container-fluid shadow mb-3 p-3" style="background-color: slategray;">
     <h1>
       Posts
     </h1>
   </div>
 
+  <div class="container mb-3">
+    <form method="POST" action="">
+      <textarea class="form-control expanding-textarea mb-2" name="newPost" id="expandingTextarea" rows="1"
+        placeholder="New post"></textarea>
+      <input type="hidden" name="formattedDate" id="formattedDate">
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="px-3 btn btn-primary rounded-4" name="btnPost">Post</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const textarea = document.getElementById('expandingTextarea');
+
+    textarea.addEventListener('input', () => {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    });
+  </script>
+
+  <div class="containter-fluid" style="border-bottom: groove; border-width: 2px;">
+
+  </div>
   <div class="container">
     <div class="row">
       <!-- PHP BLOCK -->
@@ -42,11 +80,7 @@ $result = executeQuery($query);
                   <h6 class="card-subtitle mt-1 ms-1 text-body-secondary">
                     <?php echo "@" . $user["userName"] . " -" ?>
                     <?php
-                    if ($user["dateTime"] != "") {
-                      echo $user["dateTime"];
-                    } else {
-                      echo "-----";
-                    }
+                    echo $user["dateTime"];
                     ?>
                   </h6>
                 </div>
@@ -77,5 +111,7 @@ $result = executeQuery($query);
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
 </body>
+
+<script src="getDate.js"></script>
 
 </html>
