@@ -64,7 +64,7 @@ if (isset($_POST['btnDelete'])) {
   <script>
     const textarea = document.getElementById('expandingTextarea');
 
-    textarea.addEventListener('input', () => {
+    textarea.addEventListener('input', function() {
       textarea.style.height = 'auto';
       textarea.style.height = textarea.scrollHeight + 'px';
     });
